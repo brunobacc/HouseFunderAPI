@@ -52,18 +52,35 @@ namespace housefunder.Controllers
 
         // PUT api/<usersController>/5
         [HttpPut("{user_id}")]
-        public void Put(int user_id, [FromBody] Users value)
+        public void Put(int user_id, [FromBody] EditUsers value)
         {
-            Users updateusers;
+            Users updateUsers;
             using (var db = new DbHelper())
             {
+                foreach (var u in db.users)
+                {
+                    if (u.user_id != user_id)
+                    {
+                        if (u.username == value.username || u.email == value.email)
+                        {
+                            return;
+                        }
+                    }   
+                }
                 if (db.users.Find(user_id) != null)
                 {
-                    updateusers = db.users.Find(user_id);
-                    updateusers.username = value.username;
-                    updateusers.email = value.email;
-                    updateusers.password = value.password;
-                    updateusers.image = value.image;
+                    updateUsers = db.users.Find(user_id);
+                    updateUsers.username = value.username;
+                    updateUsers.email = value.email;
+                    if (value.password != null)
+                    {
+                        value.password = Sha256.ComputeSHA256(value.password);
+                        updateUsers.password = value.password;
+                    }
+                    if (value.image != null)
+                    {
+                        updateUsers.image = value.image;
+                    }
                     db.SaveChanges();
                 }
             }

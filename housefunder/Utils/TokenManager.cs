@@ -76,9 +76,5 @@ namespace housefunder.Utils
             username = usernameClaim.Value;
             return username;
         }
-
-        public TokenManager()
-        {
-        }
     }
 }

@@ -14,6 +14,7 @@ namespace housefunder.Helper
         public DbSet<Partnerships> partnerships { get; set; }
         public DbSet<FinancersQuery2> financersQuery2 { get; set; }
         public DbSet<ProjectsFinanced> projectsfinanced { get; set; }
+        public DbSet<EditUsers> editusers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

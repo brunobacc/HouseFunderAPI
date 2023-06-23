@@ -15,10 +15,9 @@ namespace housefunder.Models
         public string description { get; set; }
         public double total_financed { get; set; }
         public double final_value { get; set; }
-        public int total_investor { get; set; }
         public DateTime date_created { get; set; }
 
-        public Projects(int project_id, int status_id, int category_id, int partnership_id, string location, string image, string title, string description, double total_financed, double final_value, int total_investor, DateTime date_created)
+        public Projects(int project_id, int status_id, int category_id, int partnership_id, string location, string image, string title, string description, double total_financed, double final_value, DateTime date_created)
         {
             this.project_id = project_id;
             this.status_id = status_id;
@@ -30,7 +29,6 @@ namespace housefunder.Models
             this.description = description;
             this.total_financed = total_financed;
             this.final_value = final_value;
-            this.total_investor = total_investor;
             this.date_created = date_created;
         }
     }

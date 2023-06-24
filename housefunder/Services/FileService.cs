@@ -30,5 +30,14 @@ namespace housefunder.Services
 
             return downloadContent.Value.Content;
         }
+
+        override public async Task Remove(string file_name)
+        {
+            var containerInstance = _blobServiceClient.GetBlobContainerClient("images");
+
+            var blobInstance = containerInstance.GetBlobClient(file_name);
+
+            await blobInstance.DeleteAsync();
+        }
     }
 }

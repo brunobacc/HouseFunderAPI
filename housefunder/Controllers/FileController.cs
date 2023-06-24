@@ -1,4 +1,5 @@
-﻿using housefunder.Models;
+﻿using housefunder.Helper;
+using housefunder.Models;
 using housefunder.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,23 +15,19 @@ namespace housefunder.Controllers
             _fileService = fileService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Upload([FromForm] Files file)
+        [HttpPost("{user_id}")]
+        public async Task<IActionResult> UploadUserImage([FromForm] Files file, int user_id)
         {
+            Users user;
             await _fileService.Upload(file);
-            return Ok(file);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Get(string name)
-        {
-            var imageFileStream = await _fileService.Get(name);
-            string fileType = "jpg";
-            if(name.Contains("png"))
+            using (var db = new DbHelper())
             {
-                fileType = "png";
+                user = db.users.Find(user_id);
+                await _fileService.Remove(user.image);
+                user.image = file.image_file.FileName;
+                db.SaveChanges();
             }
-            return File(imageFileStream, $"image/{fileType}");
+            return Ok(file);
         }
     }
 }

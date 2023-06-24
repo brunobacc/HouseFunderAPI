@@ -77,10 +77,6 @@ namespace housefunder.Controllers
                         value.password = Sha256.ComputeSHA256(value.password);
                         updateUsers.password = value.password;
                     }
-                    if (value.image != null)
-                    {
-                        updateUsers.image = value.image;
-                    }
                     db.SaveChanges();
                 }
             }

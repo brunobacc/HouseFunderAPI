@@ -26,7 +26,7 @@ namespace housefunder.Models
             this.email = email;
             this.password = password;
             this.permission_level = permission_level;
-            image = "user_image.png";
+            image = "user_image.jpg";
         }
     }
 }

@@ -1,5 +1,7 @@
+using Azure.Storage.Blobs;
 using housefunder.Helper;
 using housefunder.Models;
+using housefunder.Services;
 using housefunder.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped(_ =>
+{
+    return new BlobServiceClient(builder.Configuration.GetConnectionString("AzureBlobStorage"));
+});
+builder.Services.AddScoped<IFileService, FileService>();
 
 var app = builder.Build();
 
@@ -23,6 +30,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseStaticFiles();
 
 /*app.Use(async (context, next) =>
 {

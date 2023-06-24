@@ -10,14 +10,12 @@ namespace housefunder.Models
         public string username { get; set; }
         public string email { get; set; }
         public string? password { get; set; }
-        public string? image { get; set; }
 
-        public EditUsers(string username, string email, string? password, string? image)
+        public EditUsers(string username, string email, string? password)
         {
             this.username = username;
             this.email = email;
             this.password = password;
-            this.image = image;
         }
     }
 }

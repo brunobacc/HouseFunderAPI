@@ -15,6 +15,7 @@ namespace housefunder.Helper
         public DbSet<FinancersQuery2> financersQuery2 { get; set; }
         public DbSet<ProjectsFinanced> projectsfinanced { get; set; }
         public DbSet<EditUsers> editusers { get; set; }
+        public DbSet<Images> images { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -29,7 +30,7 @@ namespace housefunder.Helper
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=housefounder.database.windows.net;Initial Catalog=HouseFounderDB;User ID=sqladmin;Password=123Admin*;Trust Server Certificate=True");
+            optionsBuilder.UseSqlServer("Data Source=housefounder.database.windows.net;Initial Catalog=HouseFunderDB;Persist Security Info=True;User ID=sqladmin;Password=123Admin*;Trust Server Certificate=True");
         }
     }
 }

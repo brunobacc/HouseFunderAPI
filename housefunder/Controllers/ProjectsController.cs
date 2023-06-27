@@ -63,6 +63,22 @@ namespace housefunder.Controllers
             }
         }
 
+        // PUT api/<ProjectsController>/5
+        [HttpPut("status/{project_id}")]
+        public void PutStatusId(int project_id, [FromBody] int value)
+        {
+            Projects updateProjects;
+            using (var db = new DbHelper())
+            {
+                if (db.projects.Find(project_id) != null)
+                {
+                    updateProjects = db.projects.Find(project_id);
+                    updateProjects.status_id = value;
+                    db.SaveChanges();
+                }
+            }
+        }
+
         // DELETE api/<ProjectsController>/5
         [HttpDelete("{project_id}")]
         public void Delete(int project_id)

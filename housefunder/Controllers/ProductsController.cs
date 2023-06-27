@@ -55,6 +55,7 @@ namespace housefunder.Controllers
                     updateproducts.description = value.description;
                     updateproducts.price = value.price;
                     updateproducts.image = value.image;
+                    updateproducts.value = value.value;
                     db.SaveChanges();
                 }
             }

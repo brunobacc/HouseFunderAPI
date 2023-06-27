@@ -10,15 +10,15 @@ namespace housefunder.Controllers
     public class FinancersQueryController : ControllerBase
     {
         // GET: api/FinancersQuery/2
-        [HttpGet("projectId")]
-        public IActionResult GetFinancersQuery(int projectId)
+        [HttpGet("project_id")]
+        public IActionResult GetFinancersQuery(int project_id)
         {
             using (var db = new DbHelper())
             {
                 var query = (
                     from u in db.users
                     join f in db.finances on u.user_id equals f.financer_id
-                    where f.project_id == projectId
+                    where f.project_id == project_id
                     select new FinancersQuery
                     {
                         username = u.username,

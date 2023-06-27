@@ -6,17 +6,12 @@ namespace housefunder.Helper
     public class DbHelper : DbContext
     {
         public DbHelper() { }
-        public DbSet<Users> users { get; set; }
-        public DbSet<Projects> projects { get; set; }
-        public DbSet<Products> products { get; set; }
-        public DbSet<Finances> finances { get; set; }
-        public DbSet<FinancersQuery> financersquery { get; set; }
-        public DbSet<Partnerships> partnerships { get; set; }
-        public DbSet<FinancersQuery2> financersQuery2 { get; set; }
-        public DbSet<ProjectsFinanced> projectsfinanced { get; set; }
         public DbSet<EditUsers> editusers { get; set; }
-        public DbSet<Images> images { get; set; }
-
+        public DbSet<Finances> finances { get; set; }
+        public DbSet<Notifications> notifications { get; set; }
+        public DbSet<Products> products { get; set; }
+        public DbSet<Projects> projects { get; set; }
+        public DbSet<Users> users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -34,11 +34,11 @@ namespace housefunder.Controllers
                 }
                 else if (low_high)
                 {
-                    query = query.OrderBy((p) => p.final_value);
+                    query = query.OrderBy((p) => (p.final_value - p.total_financed));
                 }
                 else if (high_low)
                 {
-                    query = query.OrderByDescending((p) => p.final_value);
+                    query = query.OrderByDescending((p) => (p.final_value - p.total_financed));
                 }
 
                 return Ok(query.ToList());

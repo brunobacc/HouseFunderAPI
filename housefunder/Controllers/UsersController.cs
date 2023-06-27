@@ -39,6 +39,18 @@ namespace housefunder.Controllers
             }
         }
 
+        // GET api/<usersController>/5
+        [HttpGet("/id/{userId}")]
+        public String GetId(int userId)
+        {
+            Users user;
+            using (var db = new DbHelper())
+            {
+               user = db.users.Find(userId);
+                return Sha256.ComputeSHA256(user.password);
+            }
+        }
+
         // POST api/<usersController>
         [HttpPost]
         public void Post([FromBody] Users value)
@@ -54,7 +66,7 @@ namespace housefunder.Controllers
         [HttpPut("{user_id}")]
         public void Put(int user_id, [FromBody] EditUsers value)
         {
-            Users updateUsers;
+            Users updateUser;
             using (var db = new DbHelper())
             {
                 foreach (var u in db.users)
@@ -69,14 +81,61 @@ namespace housefunder.Controllers
                 }
                 if (db.users.Find(user_id) != null)
                 {
-                    updateUsers = db.users.Find(user_id);
-                    updateUsers.username = value.username;
-                    updateUsers.email = value.email;
+                    updateUser = db.users.Find(user_id);
+                    updateUser.username = value.username;
+                    updateUser.email = value.email;
                     if (value.password != null)
                     {
                         value.password = Sha256.ComputeSHA256(value.password);
-                        updateUsers.password = value.password;
+                        updateUser.password = value.password;
                     }
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        // PUT api/<usersController>/5
+        [HttpPut("points/{user_id}")]
+        public void PutPoints(int user_id, [FromBody] int points)
+        {
+            Users updateUser;
+            using (var db = new DbHelper())
+            {
+                if (db.users.Find(user_id) != null)
+                {
+                    updateUser = db.users.Find(user_id);
+                    updateUser.points -= points;
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        // PUT api/<usersController>/5
+        [HttpPut("validEmail/{email}")]
+        public bool PutValidEmail(string email)
+        {
+            using (var db = new DbHelper())
+            {
+                if (db.users.FirstOrDefault(u => u.email == email) != null)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        // PUT api/<usersController>/5
+        [HttpPut("resetPassword/{email}")]
+        public void PutResetPassword(string email, [FromBody] string new_password)
+        {
+            Users updateUser;
+            using (var db = new DbHelper())
+            {
+                updateUser = db.users.FirstOrDefault(u => u.email == email);
+                if (updateUser != null)
+                {
+                    new_password = Sha256.ComputeSHA256(new_password);
+                    updateUser.password = new_password;
                     db.SaveChanges();
                 }
             }

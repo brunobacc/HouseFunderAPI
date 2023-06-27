@@ -12,6 +12,7 @@ namespace housefunder.Models
         public int price { get; set; }
         public string image { get; set; }
         public double? value { get; set; }
+        public bool active { get; set; }
 
         public Products(int product_id, string title, string description, int price, string image, double? value)
         {
@@ -21,6 +22,7 @@ namespace housefunder.Models
             this.price = price;
             this.image = image;
             this.value = value;
+            active = true;
         }
     }
 }

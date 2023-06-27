@@ -9,6 +9,7 @@ namespace housefunder.Models
         public int status_id { get; set; }
         public int category_id { get; set; }
         public int partnership_id { get; set; }
+        public int? financer_id { get; set; }
         public string location { get; set; }
         public string image { get; set; }
         public string title { get; set; }
@@ -17,19 +18,19 @@ namespace housefunder.Models
         public double final_value { get; set; }
         public DateTime date_created { get; set; }
 
-        public Projects(int project_id, int status_id, int category_id, int partnership_id, string location, string image, string title, string description, double total_financed, double final_value, DateTime date_created)
+        public Projects(int status_id, int category_id, int partnership_id, int? financer_id, string location, string image, string title, string description, double final_value)
         {
-            this.project_id = project_id;
             this.status_id = status_id;
             this.category_id = category_id;
             this.partnership_id = partnership_id;
+            this.financer_id = financer_id;
             this.location = location;
             this.image = image;
             this.title = title;
             this.description = description;
-            this.total_financed = total_financed;
-            this.final_value = final_value;
-            this.date_created = date_created;
+            total_financed = 0;
+            this.final_value = final_value; 
+            date_created = DateTime.Now;
         }
     }
 }

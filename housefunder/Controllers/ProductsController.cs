@@ -65,11 +65,14 @@ namespace housefunder.Controllers
         [HttpDelete("{product_id}")]
         public void Delete(int product_id)
         {
+            Products product;
             using (var db = new DbHelper())
             {
                 if (db.products.Find(product_id) != null)
                 {
-                    db.products.Remove(db.products.Find(product_id));
+
+                    product = db.products.Find(product_id);
+                    product.active = false;
                     db.SaveChanges();
                 }
             }

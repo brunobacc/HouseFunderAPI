@@ -11,6 +11,6 @@ namespace housefunder.Models
         public int id { get; set; }
         public string name { get; set; }
         public string image { get; set; }
-        public string validated_proposals { get; set; }
+        public int validated_proposals { get; set; }
     }
 }

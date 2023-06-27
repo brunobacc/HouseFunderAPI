@@ -18,7 +18,13 @@ namespace housefunder.Controllers
                 var query = (
                         from u in db.users
                         where u.permission_level == 2
-                        select new { u.username, u.image, u.validated_proposals }
+                        select new Partnerships
+                        {
+                            id = u.user_id,
+                            image = u.image,
+                            name = u.username,
+                            validated_proposals = u.validated_proposals
+                        }
                     );
                 return Ok(query.ToList());
             }

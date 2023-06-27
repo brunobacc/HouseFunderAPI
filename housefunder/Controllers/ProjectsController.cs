@@ -1,6 +1,8 @@
 ﻿using housefunder.Helper;
 using housefunder.Models;
+using housefunder.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace housefunder.Controllers
 {
@@ -16,29 +18,42 @@ namespace housefunder.Controllers
                 return db.projects.ToArray();
             }
         }
-        // GET api/<ProjectsController>/5
-        [HttpGet("{project_id}")]
-        public Projects Get(int project_id)
+
+        // GET: Projects
+        [HttpGet("{user_id}")]
+        public IActionResult GetFinishedProjectsQuery(int user_id)
         {
             using (var db = new DbHelper())
             {
-                if (db.projects.Find(project_id) != null)
-                {
-                    return db.projects.Find(project_id);
-                }
-                return null;
+                var query = (
+                    from p in db.projects
+                    where p.status_id == 3 && p.partnership_id == user_id
+                    select p
+                    );
+                return Ok(query.ToList());
             }
+        }
+
+        private readonly IFileService _fileService;
+        public ProjectsController(IFileService fileService)
+        {
+            _fileService = fileService;
         }
 
         // POST api/<ProjectsController>
         [HttpPost]
-        public void Post([FromBody] Projects value)
+        public async Task<bool> Post([FromForm] Files file, [FromForm] ProjectsAdd project_add)
         {
+            double finalValue = double.Parse(project_add.final_value);
+
+            await _fileService.UploadProject(file);
+            Projects project = new Projects(project_add.status_id, project_add.category_id, project_add.partnership_id, project_add.financer_id, project_add.location, file.image_file.FileName, project_add.title, project_add.description, finalValue);
             using (var db = new DbHelper())
             {
-                db.projects.Add(value);
+                db.projects.Add(project);
                 db.SaveChanges();
             }
+            return true;
         }
 
         // PUT api/<ProjectsController>/5

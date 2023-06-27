@@ -11,7 +11,7 @@ namespace housefunder.Services
         {
             _blobServiceClient = blobServiceClient;
         }
-        override public async Task Upload(Files file)
+        override public async Task UploadUser(Files file)
         {
             var containerInstance = _blobServiceClient.GetBlobContainerClient("images");
 
@@ -31,9 +31,43 @@ namespace housefunder.Services
             return downloadContent.Value.Content;
         }
 
-        override public async Task Remove(string file_name)
+        override public async Task RemoveUser(string file_name)
         {
             var containerInstance = _blobServiceClient.GetBlobContainerClient("images");
+
+            var blobInstance = containerInstance.GetBlobClient(file_name);
+
+            await blobInstance.DeleteAsync();
+        }
+        override public async Task UploadProject(Files file)
+        {
+            var containerInstance = _blobServiceClient.GetBlobContainerClient("projects");
+
+            var blobInstance = containerInstance.GetBlobClient(file.image_file.FileName);
+
+            await blobInstance.UploadAsync(file.image_file.OpenReadStream());
+        }
+
+        override public async Task RemoveProject(string file_name)
+        {
+            var containerInstance = _blobServiceClient.GetBlobContainerClient("projects");
+
+            var blobInstance = containerInstance.GetBlobClient(file_name);
+
+            await blobInstance.DeleteAsync();
+        }
+        override public async Task UploadProducts(Files file)
+        {
+            var containerInstance = _blobServiceClient.GetBlobContainerClient("products");
+
+            var blobInstance = containerInstance.GetBlobClient(file.image_file.FileName);
+
+            await blobInstance.UploadAsync(file.image_file.OpenReadStream());
+        }
+
+        override public async Task RemoveProducts(string file_name)
+        {
+            var containerInstance = _blobServiceClient.GetBlobContainerClient("products");
 
             var blobInstance = containerInstance.GetBlobClient(file_name);
 

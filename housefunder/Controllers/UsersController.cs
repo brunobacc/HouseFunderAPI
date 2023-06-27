@@ -39,18 +39,6 @@ namespace housefunder.Controllers
             }
         }
 
-        // GET api/<usersController>/5
-        [HttpGet("/id/{userId}")]
-        public String GetId(int userId)
-        {
-            Users user;
-            using (var db = new DbHelper())
-            {
-               user = db.users.Find(userId);
-                return Sha256.ComputeSHA256(user.password);
-            }
-        }
-
         // POST api/<usersController>
         [HttpPost]
         public void Post([FromBody] Users value)

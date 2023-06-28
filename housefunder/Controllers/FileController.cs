@@ -23,7 +23,10 @@ namespace housefunder.Controllers
             using (var db = new DbHelper())
             {
                 user = db.users.Find(user_id);
-                await _fileService.RemoveUser(user.image);
+                if (user.image != "user_image.jpg")
+                {
+                    await _fileService.RemoveUser(user.image);
+                }
                 user.image = file.image_file.FileName;
                 db.SaveChanges();
             }

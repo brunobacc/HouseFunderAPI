@@ -1,6 +1,7 @@
 ﻿using housefunder.Helper;
 using housefunder.Models;
 using housefunder.Services;
+using housefunder.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 
@@ -80,29 +81,70 @@ namespace housefunder.Controllers
 
         // PUT api/<ProjectsController>/5
         [HttpPut("status/{project_id}")]
-        public void PutStatusId(int project_id, [FromBody] int value)
+        public bool PutStatusId(int project_id, [FromBody] UpdateStatus value)
         {
             Projects updateProjects;
+            Users updateUser;
+            Users updateFinancer;
+            Notifications notification = new Notifications();
+            string email;
+
             using (var db = new DbHelper())
             {
                 if (db.projects.Find(project_id) != null)
                 {
+                    if (value.token != null)
+                    {
+                        email = TokenManager.ValidateToken(value.token);
+
+                        if (email != null)
+                        {
+                            foreach (Users u in db.users)
+                            {
+                                if (u.email == email)
+                                {
+                                    updateUser = u;
+                                    updateUser.validated_proposals++;
+                                }
+                            }
+                        }
+                    }
                     updateProjects = db.projects.Find(project_id);
-                    updateProjects.status_id = value;
+                    updateProjects.status_id = value.status_id;
+                    updateFinancer = db.users.Find(updateProjects.financer_id);
+                    if (value.status_id == 1)
+                    {
+                        updateFinancer.accepted_projects++;
+                        notification.title = "Project Refused";
+                        notification.description = $"The project {updateProjects.title} was refused.";
+                        notification.financer_id = updateFinancer.user_id;
+                        db.notifications.Add(notification);
+                    }
+                    else if (value.status_id == 2)
+                    {
+                        notification.title = "Project Accepted";
+                        notification.description = $"The project {updateProjects.title} was accepted.";
+                        notification.financer_id = updateFinancer.user_id;
+                        db.notifications.Add(notification);
+                    }
                     db.SaveChanges();
+                    return true;
                 }
             }
+            return false;
         }
 
         // DELETE api/<ProjectsController>/5
         [HttpDelete("{project_id}")]
         public void Delete(int project_id)
         {
+            Projects updatedProject;
             using (var db = new DbHelper())
             {
                 if (db.projects.Find(project_id) != null)
                 {
-                    db.projects.Remove(db.projects.Find(project_id));
+                    updatedProject = db.projects.Find(project_id);
+                    updatedProject.status_id = 1;
                     db.SaveChanges();
                 }
             }

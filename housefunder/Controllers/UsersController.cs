@@ -1,5 +1,6 @@
 ﻿using housefunder.Helper;
 using housefunder.Models;
+using housefunder.Services;
 using housefunder.Utils;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +8,7 @@ namespace housefunder.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class usersController : ControllerBase
+    public class UsersController : ControllerBase
     {// GET: Users
         [HttpGet]
         public Users[] Get()
@@ -21,7 +22,7 @@ namespace housefunder.Controllers
         [HttpGet("{token}")]
         public Users Get(string token)
         {
-            String email = TokenManager.ValidateToken(token);
+            string email = TokenManager.ValidateToken(token);
             using (var db = new DbHelper())
             {
                 if (email != null)
@@ -39,15 +40,46 @@ namespace housefunder.Controllers
             }
         }
 
-        // POST api/<usersController>
-        [HttpPost]
-        public void Post([FromBody] Users value)
+        private readonly IFileService _fileService;
+        public UsersController(IFileService fileService)
         {
+            _fileService = fileService;
+        }
+
+        // POST api/<UsersController>
+        [HttpPost]
+        public async Task<bool> Post([FromForm] Files file, [FromForm] AdministratorAdd administrator)
+        {
+            await _fileService.UploadUser(file);
+            Users user = new Users(administrator.username, administrator.email, administrator.password, 3);
             using (var db = new DbHelper())
             {
-                db.users.Add(value);
+                user.image = file.image_file.FileName;
+                db.users.Add(user);
                 db.SaveChanges();
             }
+            return true;
+        }
+
+        [HttpPost("{user_id}")]
+        public async Task<bool> UpdateUser([FromForm] Files file, [FromForm] AdministratorAdd administrator, int user_id)
+        {
+            await _fileService.UploadUser(file);
+            Users updatedUser;
+            using (var db = new DbHelper())
+            {
+                updatedUser = db.users.Find(user_id);
+                updatedUser.username = administrator.username;
+                updatedUser.email = administrator.email;
+                if (administrator.password != "a")
+                {
+                    updatedUser.password = administrator.password;
+                }
+                await _fileService.RemoveUser(updatedUser.image);
+                updatedUser.image = file.image_file.FileName;
+                db.SaveChanges();
+            }
+            return true;
         }
 
         // PUT api/<usersController>/5
@@ -133,11 +165,13 @@ namespace housefunder.Controllers
         [HttpDelete("{user_id}")]
         public void Delete(int user_id)
         {
+            Users user;
             using (var db = new DbHelper())
             {
                 if (db.users.Find(user_id) != null)
                 {
-                    db.users.Remove(db.users.Find(user_id));
+                    user = db.users.Find(user_id);
+                    user.permission_level = 0;
                     db.SaveChanges();
                 }
             }

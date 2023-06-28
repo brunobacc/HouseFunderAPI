@@ -11,12 +11,11 @@ namespace housefunder.Models
         public string description { get; set; }
         public int price { get; set; }
         public string image { get; set; }
-        public double? value { get; set; }
+        public int? value { get; set; }
         public bool active { get; set; }
 
-        public Products(int product_id, string title, string description, int price, string image, double? value)
+        public Products(string title, string description, int price, string image, int? value)
         {
-            this.product_id = product_id;
             this.title = title;
             this.description = description; 
             this.price = price;

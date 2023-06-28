@@ -56,7 +56,7 @@ namespace housefunder.Services
 
             await blobInstance.DeleteAsync();
         }
-        override public async Task UploadProducts(Files file)
+        override public async Task UploadProduct(Files file)
         {
             var containerInstance = _blobServiceClient.GetBlobContainerClient("products");
 
@@ -65,7 +65,7 @@ namespace housefunder.Services
             await blobInstance.UploadAsync(file.image_file.OpenReadStream());
         }
 
-        override public async Task RemoveProducts(string file_name)
+        override public async Task RemoveProduct(string file_name)
         {
             var containerInstance = _blobServiceClient.GetBlobContainerClient("products");
 

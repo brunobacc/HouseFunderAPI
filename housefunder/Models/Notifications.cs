@@ -9,10 +9,5 @@ namespace housefunder.Models
         public string title { get; set; }
         public string description { get; set; }
 
-        public Notifications(string title, string description) 
-        {
-            this.title = title;
-            this.description = description;
-        }
     }
 }

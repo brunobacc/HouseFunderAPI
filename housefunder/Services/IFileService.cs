@@ -14,8 +14,8 @@ namespace housefunder.Services
 
         public abstract Task RemoveProject(string file_name);
 
-        public abstract Task UploadProducts(Files file);
+        public abstract Task UploadProduct(Files file);
 
-        public abstract Task RemoveProducts(string file_name);
+        public abstract Task RemoveProduct(string file_name);
     }
 }
